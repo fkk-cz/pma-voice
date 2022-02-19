@@ -2,12 +2,13 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     position: fixed;
     text-align: right;
-    bottom: 5%;
+    /* bottom: 5%; */
     padding: 0;
-    right: 5px;
+    top: 50px;
+    right: 40px;
     font-size: 12px;
     font-weight: 700;
-    color: #949697;
+    color: rgb(255, 255, 255);
     text-shadow: 1.25px 0 0 #000, 0 -1.25px 0 #000, 0 1.25px 0 #000, -1.25px 0 0 #000
 }
 
