@@ -30,7 +30,7 @@ function setProximityState(proximityRange, isCustom)
 		index = mode,
 		distance = proximityRange,
 		mode = isCustom and "Custom" or voiceModeData[2],
-	}, true)
+	}, false)
 	sendUIMessage({
 		-- JS expects this value to be - 1, "custom" voice is on the last index
 		voiceMode = isCustom and #Cfg.voiceModes or mode - 1
