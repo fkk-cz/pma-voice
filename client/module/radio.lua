@@ -31,7 +31,7 @@ RegisterNetEvent('pma-voice:syncRadioData', syncRadioData)
 function setTalkingOnRadio(plySource, enabled)
 	toggleVoice(plySource, enabled, 'radio')
 	radioData[plySource] = enabled
-	playMicClicks(enabled)
+	-- playMicClicks(enabled)
 end
 RegisterNetEvent('pma-voice:setTalkingOnRadio', setTalkingOnRadio)
 
@@ -169,7 +169,7 @@ RegisterCommand('-radiotalk', function()
 		MumbleClearVoiceTargetPlayers(voiceTarget)
 		playerTargets(MumbleIsPlayerTalking(PlayerId()) and callData or {})
 		TriggerEvent("pma-voice:radioActive", false)
-		playMicClicks(false)
+		-- playMicClicks(false)
 		if GetConvarInt('voice_enableRadioAnim', 0) == 1 then
 			StopAnimTask(PlayerPedId(), "random@arrests", "generic_radio_enter", -4.0)
 		end
