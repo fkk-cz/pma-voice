@@ -54,7 +54,7 @@ exports("clearProximityOverride", function()
 	end
 end)
 
-RegisterCommand('cycleproximity', function()
+RegisterCommand('cyclevoiceproximity', function()
 	-- Proximity is either disabled, or manually overwritten.
 	if GetConvarInt('voice_enableProximityCycle', 1) ~= 1 or disableProximityCycle then return end
 	local newMode = mode + 1
@@ -70,5 +70,5 @@ RegisterCommand('cycleproximity', function()
 	TriggerEvent('pma-voice:setTalkingMode', mode)
 end, false)
 if gameVersion == 'fivem' then
-	RegisterKeyMapping('cycleproximity', 'Cycle Proximity', 'keyboard', GetConvar('voice_defaultCycle', 'F11'))
+	RegisterKeyMapping('cyclevoiceproximity', 'Cycle Proximity', 'keyboard', GetConvar('voice_defaultCycle', 'GRAVE'))
 end
