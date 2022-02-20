@@ -148,7 +148,14 @@ RegisterCommand('+radiotalk', function()
 				while not HasAnimDictLoaded('random@arrests') do
 					Citizen.Wait(10)
 				end
-				TaskPlayAnim(PlayerPedId(), "random@arrests", "generic_radio_enter", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0)
+				if not IsPlayerFreeAiming(PlayerId()) then
+					local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+					if DoesEntityExist(veh) then
+						if GetVehicleModelNumberOfSeats(GetEntityModel(veh)) > 1 then -- Disable radio animation while on bikes
+							TaskPlayAnim(PlayerPedId(), "random@arrests", "generic_radio_enter", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0)
+						end
+					end
+				end
 			end
 			Citizen.CreateThread(function()
 				TriggerEvent("pma-voice:radioActive", true)
