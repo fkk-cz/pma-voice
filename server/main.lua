@@ -14,13 +14,14 @@ end
 
 function handleStateBagInitilization(source)
 	local plyState = Player(source).state
-	if not plyState.pmaVoiceInit then 
+	if not plyState.pmaVoiceInit then
 		plyState:set('radio', GetConvarInt('voice_defaultRadioVolume', 30), true)
 		plyState:set('phone', GetConvarInt('voice_defaultPhoneVolume', 60), true)
 		plyState:set('proximity', {}, true)
 		plyState:set('callChannel', 0, true)
 		plyState:set('radioChannel', 0, true)
 		plyState:set('voiceIntent', 'speech', true)
+		plyState:set('megaphoneEnabled', false, true)
 		-- We want to save voice inits because we'll automatically reinitalize calls and channels
 		plyState:set('pmaVoiceInit', true, false)
 	end

@@ -135,6 +135,7 @@ end
 RegisterCommand('+radiotalk', function()
 	if GetConvarInt('voice_enableRadios', 1) ~= 1 then return end
 	if isDead() then return end
+	if megaphoneEnabled then return end
 
 	if not radioPressed and radioEnabled then
 		if radioChannel > 0 then
@@ -184,7 +185,7 @@ RegisterCommand('-radiotalk', function()
 	end
 end, false)
 if gameVersion == 'fivem' then
-	RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', GetConvar('voice_defaultRadio', 'LMENU'))
+	RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', GetConvar('voice_defaultRadio', 'G'))
 end
 
 --- event syncRadio

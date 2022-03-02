@@ -8,6 +8,7 @@ local volumes = {
 }
 
 radioEnabled, radioPressed, mode = true, false, GetConvarInt('voice_defaultVoiceMode', 2)
+megaphoneEnabled = false
 radioData = {}
 callData = {}
 
@@ -71,6 +72,8 @@ if gameVersion == 'fivem' then
 	SetAudioSubmixEffectParamFloat(phoneEffectId, 1, `freq_low`, 300.0)
 	SetAudioSubmixEffectParamFloat(phoneEffectId, 1, `freq_hi`, 6000.0)
 	AddAudioSubmixOutput(phoneEffectId, 1)
+
+	megaphoneEffectId = CreateAudioSubmix('MPhone')
 end
 
 local submixFunctions = {
@@ -78,7 +81,26 @@ local submixFunctions = {
 		MumbleSetSubmixForServerId(plySource, radioEffectId)
 	end,
 	['phone'] = function(plySource)
+		SetAudioSubmixEffectRadioFx(phoneEffectId, 1)
+		SetAudioSubmixEffectParamInt(phoneEffectId, 1, GetHashKey('default'), 1)
+		SetAudioSubmixEffectParamFloat(phoneEffectId, 1, GetHashKey('freq_low'), 400.0)
+		SetAudioSubmixEffectParamFloat(phoneEffectId, 1, GetHashKey('freq_hi'), 4000.0)
+		-- SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 7.0)
+		AddAudioSubmixOutput(phoneEffectId, 1)
+
 		MumbleSetSubmixForServerId(plySource, phoneEffectId)
+	end,
+	["megaphone"] = function(plySource)
+		SetAudioSubmixEffectRadioFx(megaphoneEffectId, 1)
+		SetAudioSubmixEffectParamInt(megaphoneEffectId, 1, GetHashKey('default'), 1)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_low'), 600.0)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_hi'), 6000.0)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 0.5)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mod_freq'), 1.0)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mix'), 20.0)
+		AddAudioSubmixOutput(megaphoneEffectId, 1)
+
+		MumbleSetSubmixForServerId(plySource, megaphoneEffectId)
 	end
 }
 
@@ -189,6 +211,49 @@ exports('setVoiceProperty', setVoiceProperty)
 exports('SetMumbleProperty', setVoiceProperty)
 exports('SetTokoProperty', setVoiceProperty)
 
+function megaphoneProximityCheck(player)
+	local tgtPed = GetPlayerPed(player)
+	local voiceModeData = Cfg.voiceModes[mode]
+	local distance = GetConvar('voice_useNativeAudio', 'false') == 'true' and voiceModeData[1] * 3 or voiceModeData[1]
+
+	if LocalPlayer.state.megaphoneEnabled then
+		logger.verbose('%s has megaphone enabled in proximity check', GetPlayerServerId(player))
+		distance = GetConvarInt("voice_megaphoneRange", 25) * 3
+	end
+
+	return #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(tgtPed)) < distance
+end
+
+--- State bag change handler
+--- Apply submix to the appropriate server ID
+AddStateBagChangeHandler(
+    "megaphoneEnabled",
+    nil,
+    function(bagName, key, value, _reserved, replicated)
+		local player = bagName:gsub("player:", "")
+		if not player then
+			return
+		end
+
+		player = tonumber(player)
+		if player == GetPlayerServerId(PlayerId()) then
+			-- Set voice targets so other players can hear you
+			if value then
+				exports["pma-voice"]:overrideProximityCheck(megaphoneProximityCheck)
+			else
+				exports["pma-voice"]:resetProximityCheck()
+			end
+		else
+			if value then
+				submixFunctions["megaphone"](player)
+				-- exports["pma-voice"]:overrideProximityCheck(megaphoneProximityCheck)
+			else
+				MumbleSetSubmixForServerId(player, -1)
+				-- exports["pma-voice"]:resetProximityCheck()
+			end
+		end
+    end
+)
 
 -- cache their external servers so if it changes in runtime we can reconnect the client.
 local externalAddress = ''

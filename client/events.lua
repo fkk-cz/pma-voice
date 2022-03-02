@@ -35,6 +35,15 @@ AddEventHandler('mumbleDisconnected', function(address)
 	logger.info('Disconnected from mumble server with address of %s', GetConvarInt('voice_hideEndpoints', 1) == 1 and 'HIDDEN' or address)
 end)
 
+AddEventHandler(
+	"baseevents:leftVehicle",
+	function(vehicle, seat, model, netID)
+		if megaphoneEnabled then
+			DisableMegaphone()
+		end
+	end
+)
+
 -- TODO: Convert the last Cfg to a Convar, while still keeping it simple.
 AddEventHandler('pma-voice:settingsCallback', function(cb)
 	cb(Cfg)
