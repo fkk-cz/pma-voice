@@ -135,7 +135,7 @@ end
 RegisterCommand('+radiotalk', function()
 	if GetConvarInt('voice_enableRadios', 1) ~= 1 then return end
 	if isDead() then return end
-	if megaphoneEnabled then return end
+	if LocalPlayer.state.megaphoneEnabled then return end
 
 	if not radioPressed and radioEnabled then
 		if radioChannel > 0 then
