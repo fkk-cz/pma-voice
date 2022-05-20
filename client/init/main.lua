@@ -4,7 +4,7 @@ local mutedPlayers = {}
 local volumes = {
 	-- people are setting this to 1 instead of 1.0 and expecting it to work.
 	['radio'] = GetConvarInt('voice_defaultRadioVolume', 30) / 100,
-	['phone'] = GetConvarInt('voice_defaultPhoneVolume', 60) / 100,
+	['call'] = GetConvarInt('voice_defaultCallVolume', 60) / 100,
 }
 
 radioEnabled, radioPressed, mode = true, false, GetConvarInt('voice_defaultVoiceMode', 2)
@@ -44,10 +44,10 @@ exports('getRadioVolume', function()
 	return volumes['radio']
 end)
 exports("setCallVolume", function(vol)
-	setVolume(vol, 'phone')
+	setVolume(vol, 'call')
 end)
 exports('getCallVolume', function()
-	return volumes['phone']
+	return volumes['call']
 end)
 
 
@@ -66,12 +66,12 @@ if gameVersion == 'fivem' then
 	SetAudioSubmixEffectParamInt(radioEffectId, 0, `default`, 1)
 	AddAudioSubmixOutput(radioEffectId, 0)
 
-	phoneEffectId = CreateAudioSubmix('Phone')
-	SetAudioSubmixEffectRadioFx(phoneEffectId, 1)
-	SetAudioSubmixEffectParamInt(phoneEffectId, 1, `default`, 1)
-	SetAudioSubmixEffectParamFloat(phoneEffectId, 1, `freq_low`, 300.0)
-	SetAudioSubmixEffectParamFloat(phoneEffectId, 1, `freq_hi`, 6000.0)
-	AddAudioSubmixOutput(phoneEffectId, 1)
+	callEffectId = CreateAudioSubmix('Call')
+	SetAudioSubmixEffectRadioFx(callEffectId, 1)
+	SetAudioSubmixEffectParamInt(callEffectId, 1, `default`, 1)
+	SetAudioSubmixEffectParamFloat(callEffectId, 1, `freq_low`, 300.0)
+	SetAudioSubmixEffectParamFloat(callEffectId, 1, `freq_hi`, 6000.0)
+	AddAudioSubmixOutput(callEffectId, 1)
 
 	megaphoneEffectId = CreateAudioSubmix('MPhone')
 end
@@ -80,24 +80,23 @@ local submixFunctions = {
 	['radio'] = function(plySource)
 		MumbleSetSubmixForServerId(plySource, radioEffectId)
 	end,
-	['phone'] = function(plySource)
-		SetAudioSubmixEffectRadioFx(phoneEffectId, 1)
-		SetAudioSubmixEffectParamInt(phoneEffectId, 1, GetHashKey('default'), 1)
-		SetAudioSubmixEffectParamFloat(phoneEffectId, 1, GetHashKey('freq_low'), 400.0)
-		SetAudioSubmixEffectParamFloat(phoneEffectId, 1, GetHashKey('freq_hi'), 4000.0)
-		-- SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 7.0)
-		AddAudioSubmixOutput(phoneEffectId, 1)
+	['call'] = function(plySource)
+		SetAudioSubmixEffectRadioFx(callEffectId, 1)
+		SetAudioSubmixEffectParamInt(callEffectId, 1, GetHashKey('default'), 1)
+		SetAudioSubmixEffectParamFloat(callEffectId, 1, GetHashKey('freq_low'), 400.0)
+		SetAudioSubmixEffectParamFloat(callEffectId, 1, GetHashKey('freq_hi'), 4000.0)
+		AddAudioSubmixOutput(callEffectId, 1)
 
-		MumbleSetSubmixForServerId(plySource, phoneEffectId)
+		MumbleSetSubmixForServerId(plySource, callEffectId)
 	end,
 	["megaphone"] = function(plySource)
 		SetAudioSubmixEffectRadioFx(megaphoneEffectId, 1)
 		SetAudioSubmixEffectParamInt(megaphoneEffectId, 1, GetHashKey('default'), 1)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_low'), 600.0)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_hi'), 6000.0)
-		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 0.5)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 0.3)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mod_freq'), 1.0)
-		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mix'), 20.0)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mix'), 10.0)
 		AddAudioSubmixOutput(megaphoneEffectId, 1)
 
 		MumbleSetSubmixForServerId(plySource, megaphoneEffectId)
