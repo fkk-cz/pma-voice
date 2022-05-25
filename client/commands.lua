@@ -74,7 +74,8 @@ if gameVersion == 'fivem' then
 end
 
 function DisableMegaphone()
-	LocalPlayer.state:set("megaphoneEnabled", false, true)
+	LocalPlayer.state.megaphoneEnabled = false
+	TriggerServerEvent("pma-voice:toggleMegaphone", false)
 	MumbleSetAudioInputIntent(`speech`)
 
 	local voiceModeData = Cfg.voiceModes[mode]
@@ -131,7 +132,8 @@ function ToggleMegaphone()
 	megaphoneEnabled = not megaphoneEnabled
 
 	if megaphoneEnabled then
-		LocalPlayer.state:set("megaphoneEnabled", true, true)
+		LocalPlayer.state.megaphoneEnabled = true
+		TriggerServerEvent("pma-voice:toggleMegaphone", true)
 		MumbleSetAudioInputIntent(`music`)
 
 		local range = GetConvarInt("voice_megaphoneRange", 25)

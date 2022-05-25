@@ -223,36 +223,25 @@ function megaphoneProximityCheck(player)
 	return #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(tgtPed)) < distance
 end
 
---- State bag change handler
---- Apply submix to the appropriate server ID
-AddStateBagChangeHandler(
-    "megaphoneEnabled",
-    nil,
-    function(bagName, key, value, _reserved, replicated)
-		local player = bagName:gsub("player:", "")
-		if not player then
-			return
-		end
+RegisterNetEvent("pma-voice:toggleMegaphone")
+AddEventHandler("pma-voice:toggleMegaphone", function(plySource, value)
+	local player = tonumber(plySource)
+	if not player then return end
 
-		player = tonumber(player)
-		if player == GetPlayerServerId(PlayerId()) then
-			-- Set voice targets so other players can hear you
-			if value then
-				exports["pma-voice"]:overrideProximityCheck(megaphoneProximityCheck)
-			else
-				exports["pma-voice"]:resetProximityCheck()
-			end
+	if player == GetPlayerServerId(PlayerId()) then
+		if value then
+			exports["pma-voice"]:overrideProximityCheck(megaphoneProximityCheck)
 		else
-			if value then
-				submixFunctions["megaphone"](player)
-				-- exports["pma-voice"]:overrideProximityCheck(megaphoneProximityCheck)
-			else
-				MumbleSetSubmixForServerId(player, -1)
-				-- exports["pma-voice"]:resetProximityCheck()
-			end
+			exports["pma-voice"]:resetProximityCheck()
 		end
-    end
-)
+	else
+		if value then
+			submixFunctions["megaphone"](player)
+		else
+			MumbleSetSubmixForServerId(player, -1)
+		end
+	end
+end)
 
 -- cache their external servers so if it changes in runtime we can reconnect the client.
 local externalAddress = ''
