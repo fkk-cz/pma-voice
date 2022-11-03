@@ -100,7 +100,8 @@ function ToggleMegaphone()
 		end
 
 		local veh = GetVehiclePedIsIn(PlayerPedId(), false)
-		if GetVehicleClass(veh) ~= 18 then
+		local vehClass = GetVehicleClass(veh)
+		if class ~= 15 and class ~= 18 then
 			return
 		end
 
