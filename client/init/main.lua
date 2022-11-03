@@ -94,9 +94,9 @@ local submixFunctions = {
 		SetAudioSubmixEffectParamInt(megaphoneEffectId, 1, GetHashKey('default'), 1)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_low'), 600.0)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('freq_hi'), 6000.0)
-		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 0.3)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('fudge'), 0.4)
 		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mod_freq'), 1.0)
-		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mix'), 10.0)
+		SetAudioSubmixEffectParamFloat(megaphoneEffectId, 1, GetHashKey('rm_mix'), 6.0)
 		AddAudioSubmixOutput(megaphoneEffectId, 1)
 
 		MumbleSetSubmixForServerId(plySource, megaphoneEffectId)
