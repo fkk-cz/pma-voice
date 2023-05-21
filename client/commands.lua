@@ -94,6 +94,10 @@ function ToggleMegaphone()
 		return
 	end
 
+	if LocalPlayer.state.inMDT then
+		return
+	end
+
 	if GetInvokingResource() == nil then -- Invoked by command, most likely from this resource
 		if not IsPedInAnyVehicle(PlayerPedId(), false) then
 			return
