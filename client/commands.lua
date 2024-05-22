@@ -100,7 +100,7 @@ function ToggleMegaphone()
 
 	if LocalPlayer.state.job then
 		local job_name = LocalPlayer.state.job.name
-		if job_name ~= 'lspd' and job_name ~= 'sahp' and job_name ~= 'lscso' then
+		if job_name ~= 'lspd' and job_name ~= 'sahp' and job_name ~= 'lscso' and job_name ~= 'lsfd' then
 			return
 		end
 	end
